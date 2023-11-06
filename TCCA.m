@@ -19,7 +19,7 @@ M_ten = ttm(cov_ten, var_mats_inv2);
 % if para.rDim == 1, the results of different runs are almost the same,
 % otherwise, we should set a random seed.
 % -------------------------------------------------------------------------
-rand('seed', 123);
+%rand('seed', 123);
 P_kten = cp_als(M_ten, rDim);
 
 % -------------------------------------------------------------------------
