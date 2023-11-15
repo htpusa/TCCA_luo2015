@@ -20,7 +20,7 @@ M_ten = ttm(cov_ten, var_mats_inv2);
 % otherwise, we should set a random seed.
 % -------------------------------------------------------------------------
 %rand('seed', 123);
-P_kten = cp_als(M_ten, rDim);
+P_kten = cp_als(M_ten, rDim, 'printitn',0);
 
 % -------------------------------------------------------------------------
 % Map the data into the low-dimensional space

@@ -13,7 +13,7 @@ for v = 1:nbView
     var_mats{v} = var_mats{v} + eps*eye(size(var_mats{v}));
 end
 
-fprintf('\n n: ');
+%fprintf('\n n: ');
 for n = 1:nbSample
     u = cell(nbView,1);
     for v = 1:nbView
@@ -28,15 +28,15 @@ for n = 1:nbSample
     clear u cov_x
     
     if rem(n, 100) == 0
-        fprintf('%d ', n);
+        %fprintf('%d ', n);
     end
     if rem(n, 1000) == 0
-        fprintf('\n n: ');
+        %fprintf('\n n: ');
     end
 end
 cov_ten = cov_ten / (nbSample-1);
 
-disp('finished!');
+%disp('finished!');
 
 end
 
