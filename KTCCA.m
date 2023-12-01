@@ -1,4 +1,4 @@
-function [H, Spect] = KTCCA(K, var_gram_mats, cov_gram_ten, set, para)
+function [H, Z] = KTCCA(K, var_gram_mats, cov_gram_ten, set, para)
 % -------------------------------------------------------------------------
 % Kernel TCCA
 % -------------------------------------------------------------------------
@@ -6,16 +6,19 @@ function [H, Spect] = KTCCA(K, var_gram_mats, cov_gram_ten, set, para)
 epsilon = para.epsilon;
 rDim = para.rDim;
 
-K_ = cell(set.nbV, 1);
-for v = 1:set.nbV
-    K_{v} = K{v}(set.idxTrnTCCA, set.idxTrnTCCA);
-end
-clear K
+% K_ = cell(set.nbV, 1);
+% for v = 1:set.nbV
+%     K_{v} = K{v}(set.idxTrnTCCA, set.idxTrnTCCA);
+% end
+% clear K
 
 L_mat_inv = cell(set.nbV, 1);
 for v = 1:set.nbV
     % termK = (1 - epsilon) * var_gram_mats{v} + epsilon * K_{v};
-    termK = var_gram_mats{v} + epsilon * K_{v}; % Here, var_gram_mats{v} = K_{v} * K_{v} / (nbSample-1);
+    
+    %termK = var_gram_mats{v} + epsilon * K_{v}; % Here, var_gram_mats{v} = K_{v} * K_{v} / (nbSample-1);
+    termK = var_gram_mats{v} + epsilon * K{v};
+    
     % termK = termK + 1e-10*eye(size(termK));
     L_mat = chol(termK);
     L_mat_inv{v} = L_mat^-1;
@@ -34,17 +37,18 @@ S_ten = ttm(cov_gram_ten, L_mat_inv);
 % if para.rDim == 1, the results of different runs are almost the same,
 % otherwise, we should set a random seed.
 % -------------------------------------------------------------------------
-rand('seed', 123);
+%rand('seed', 123);
 % P_kten = parafac_als(S_ten, rDim);
-P_kten = cp_als(S_ten, rDim);
+P_kten = cp_als(S_ten, rDim, 'printitn',0);
 % [U, S, V] = svds(double(S_ten), rDim); P_kten.U{1} = U; P_kten.U{2} = V;
 clear S_ten
 
 H = cell(set.nbV, 1);
+Z = cell(set.nbV, 1);
 for v = 1:set.nbV
     H{v} = L_mat_inv{v}' * P_kten.U{v};
+    Z{v} = K{v}*H{v};
 end
-Spect = P_kten.lambda;
 
 end
 
